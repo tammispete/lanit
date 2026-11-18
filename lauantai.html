@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lauantai</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+      /* Dark gradient overlay + CS2 Background Image */
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+                  url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.gamesreviews.com%2Fwp-content%2Fuploads%2F2023%2F10%2Fcounter-strike-2.jpg&f=1&nofb=1&ipt=e048a785be81dfe4d85e00fbdf272e4564756736bdf7447e3825f9a21bf2fbeb&ipo=images');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><a href="index.html"> Hyvinkää Lanit</a></div>
+
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+  </button>
+
+  <nav id="nav-menu">
+      <ul>
+          <li><a href="perjantai.html">PERJANTAI</a></li>
+          <li><a href="lauantai.html">LAUANTAI</a></li>
+      </ul>
+  </nav>
+</header>
+
+<h1>Lauantain pelit</h1>
+<div class="counters" id="counters"></div>
+
+<div class="wrap">
+  <table id="dataTable">
+    <thead><tr id="headRow"></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+  // Column headings and their types: "text", "select" (voitto/tappio) or "check" (true/false)
+  const columns = [
+    { name: "KARTTA",         type: "select", options: ["Ancient", "Anubis", "Cache", "Dust2", "Inferno", "Mirage", "Nuke"] },
+    { name: "OMAT SCORE",     type: "text" },
+    { name: "VIHU SCORE",     type: "text" },
+    { name: "voitto/tappio",  type: "result" },
+    { name: "t.danger",       type: "check" },
+    { name: "devi",           type: "check" },
+    { name: "jannejalopeura", type: "check" },
+    { name: "laama",          type: "check" },
+    { name: "batari",         type: "check" },
+    { name: "turisti",        type: "check" },
+    { name: "muhinaattori",   type: "check" },
+    { name: "POISTA",         type: "action"}
+  ];
+
+  const emptyRow = () => columns.map(c => c.type === "check" ? false : "");
+  const isEmpty = row => row.every(v => v === "" || v === false);
+
+  let rows = [emptyRow()];   // the last row is always an empty one, ready to fill in
+  let sortCol = null;
+  let sortAsc = true;
+
+  const headRow = document.getElementById("headRow");
+  const tbody = document.querySelector("#dataTable tbody");
+
+  columns.forEach((col, i) => {
+    const th = document.createElement("th");
+    th.textContent = col.name + " ↕";
+    th.addEventListener("click", () => sortBy(i));
+    headRow.appendChild(th);
+  });
+
+  function colorCell(td, value) {
+    td.className = value === "voitto" ? "win" : value === "tappio" ? "loss" : "tasapeli";
+  }
+
+  function updateResult(row, tr) {
+    const r = columns.findIndex(c => c.type === "result");
+    if ( r === -1) return;
+
+    const own = parseFloat(row[columns.findIndex(c => c.name === "OMAT SCORE")]);
+    const enemy = parseFloat(row[columns.findIndex(c => c.name === "VIHU SCORE")]);
+
+    let result = "";
+    if (!isNaN(own) && !isNaN(enemy)) {
+      result = own > enemy ? "voitto" : enemy > own ? "tappio" : "tasuri";
+    }
+    
+    row[r] = result;
+    tr.resultSpan.textContent = result;
+    colorCell(tr.resultCell, result);
+  }
+
+  // Function to check vertical streaks and highlight ONLY that player's cell
+ // Function to check vertical streaks and highlight ONLY that player's cell yellow
+// Function to check vertical streaks and highlight cells yellow (2 streak) or red (3+ streak)
+  function updateAllHighlights() {
+    const trs = tbody.querySelectorAll("tr");
+    rows.forEach((row, index) => {
+      const tr = trs[index];
+      if (!tr) return;
+
+      columns.forEach((col, colIdx) => {
+        if (col.type === "check") {
+          const td = tr.children[colIdx];
+          if (!td) return;
+
+          let trueStreak = 0;
+          
+          // Count how many consecutive true values exist going backwards from the current row
+          for (let i = index - 1; i >= 0; i--) {
+            if (rows[i][colIdx] === true) {
+              trueStreak++;
+            } else {
+              break; // Stop counting as soon as there's a break in the streak
+            }
+          }
+
+          // Apply classes based on streak length
+          if (trueStreak >= 3) {
+            td.classList.add("red-cell");
+            td.classList.remove("yellow-cell");
+          } else if (trueStreak === 2) {
+            td.classList.add("yellow-cell");
+            td.classList.remove("red-cell");
+          } else {
+            td.classList.remove("yellow-cell");
+            td.classList.remove("red-cell");
+          }
+        }
+      });
+    });
+  }
+
+  function buildRow(row) {
+    const tr = document.createElement("tr");
+    columns.forEach((col, i) => {
+      const td = document.createElement("td");
+      let input;
+
+      if (col.type === "check") {
+        td.className = "check";
+        input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = row[i];
+        input.addEventListener("change", () => { 
+          row[i] = input.checked; 
+          updateAllHighlights(); 
+          afterEdit(); 
+        });
+      } else if (col.type === "result"){
+        input = document.createElement("span");
+        tr.resultSpan = input;
+        tr.resultCell = td;
+      
+      } else if (col.type === "select") {
+        input = document.createElement("select");
+        ["", ...(col.options || ["voitto", "tappio"])].forEach(v => {
+          const o = document.createElement("option");
+          o.value = v; o.textContent = v;
+          input.appendChild(o);
+        });
+        input.value = row[i];
+        colorCell(td, row[i]);
+        input.addEventListener("change", () => { row[i] = input.value; colorCell(td, input.value); afterEdit(); });
+      } else if (col.type === "action") {
+        input = document.createElement("button");
+        input.textContent = "❌";
+        input.type = "button";
+        input.className = "delete-btn";
+
+        input.addEventListener("click", () => {
+          const rowIndex = rows.indexOf(row);
+          if (rowIndex > -1) {
+            rows.splice(rowIndex, 1); // Fixed from row.splice to rows.splice
+
+            if (rows.length === 0 || !isEmpty(rows[rows.length - 1])) {
+              rows.push(emptyRow());
+            }
+            render();
+          }
+        });
+      } else {
+        input = document.createElement("input");
+        input.type = "text";
+        input.value = row[i];
+        input.addEventListener("input", () => { row[i] = input.value; updateResult(row, tr); afterEdit(); });
+      }
+
+      // Only append the input if it was created (the action button acts as both input/element here)
+      if (input) {
+        td.appendChild(input);
+      }
+      tr.appendChild(td);
+    });
+    updateResult(row, tr);
+    return tr;
+  }
+  const countersEl = document.getElementById("counters");
+
+  // One counter per checkbox column: every ticked box adds 1
+  function updateCounters() {
+    countersEl.innerHTML = "";
+    columns.forEach((col, i) => {
+      if (col.type !== "check") return;
+      const count = rows.filter(r => r[i]).length;
+      const badge = document.createElement("span");
+      badge.className = "counter";
+      badge.textContent = col.name + ": " + count;
+      countersEl.appendChild(badge);
+    });
+  }
+
+  // Once the last row gets any content, add a fresh empty row below it
+  function afterEdit() {
+    updateCounters();
+    updateAllHighlights();
+    if (!isEmpty(rows[rows.length - 1])) {
+      const fresh = emptyRow();
+      rows.push(fresh);
+      tbody.appendChild(buildRow(fresh));
+    }
+  }
+
+  function render() {
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(buildRow(row)));
+    updateAllHighlights();
+    updateCounters();
+  }
+
+  function sortBy(i) {
+    sortAsc = (sortCol === i) ? !sortAsc : true;
+    sortCol = i;
+    const filled = rows.filter(r => !isEmpty(r));
+    filled.sort((a, b) => {
+      const x = a[i], y = b[i];
+      let result;
+      if (typeof x === "boolean") result = Number(x) - Number(y);
+      else if (x !== "" && y !== "" && !isNaN(x) && !isNaN(y)) result = x - y;
+      else result = String(x).localeCompare(String(y));
+      return sortAsc ? result : -result;
+    });
+    rows = [...filled, emptyRow()];
+    render();
+  }
+
+  render();
+</script>
+
+</body>
+</html>

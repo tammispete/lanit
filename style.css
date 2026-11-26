@@ -252,3 +252,70 @@ nav a {
 #status.error {
     color: #ff8a8a;
 }
+
+
+/* --- ETUSIVUN TILASTOT --- */
+
+.stats-filter {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 1rem 0 0.5rem;
+}
+
+.stats-filter button {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    padding: 4px 14px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.stats-filter button.active {
+    background: #00adb5;
+    color: white;
+    border-color: #00adb5;
+}
+
+.stats-status {
+    text-align: center;
+    min-height: 1.2em;
+    font-size: 0.85rem;
+    color: #bbb;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.stat-card {
+    background-color: rgba(221, 215, 215, 0.85);
+    color: #222;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    overflow-x: auto;
+}
+
+.stat-card h2 {
+    margin: 0 0 0.5rem;
+    color: #222;
+}
+
+.stat-card table {
+    width: 100%;
+    margin-top: 0;
+}
+
+.stat-card th {
+    cursor: default;
+}
+
+.stat-card th:hover {
+    background: #f0f0f0;
+}

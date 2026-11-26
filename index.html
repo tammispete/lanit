@@ -42,6 +42,23 @@ body {
             <li><p><a href="lauantai.html">LAUANTAI</a></p></li>
          </ul>
     </div>
+
+    <div id="stats-filter" class="stats-filter">
+        <button type="button" data-day="all" class="active">Kaikki</button>
+        <button type="button" data-day="perjantai">Perjantai</button>
+        <button type="button" data-day="lauantai">Lauantai</button>
+    </div>
+    <div id="stats-status" class="stats-status"></div>
+    <div class="stats">
+        <section class="stat-card">
+            <h2>Pelaajat</h2>
+            <div id="player-stats"></div>
+        </section>
+        <section class="stat-card">
+            <h2>Kartat</h2>
+            <div id="map-stats"></div>
+        </section>
+    </div>
 </main>
 <script>
     const hamburger = document.getElementById('hamburger');
@@ -53,5 +70,8 @@ body {
     });
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="stats.js"></script>
 </body>
 </html>

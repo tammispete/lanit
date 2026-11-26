@@ -47,12 +47,7 @@ th {
     background: #f0f0f0; 
     color: #333;
     padding: 6px 10px; 
-    cursor: pointer; 
     user-select: none; 
-}
-
-th:hover { 
-    background: #e2e2e2; 
 }
 
 td.check { 

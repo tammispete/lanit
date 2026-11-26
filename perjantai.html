@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perjantai</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+      /* Dark gradient overlay + CS2 Background Image */
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+                  url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic0.gamerantimages.com%2Fwordpress%2Fwp-content%2Fuploads%2F2023%2F11%2Fcounter-strike-2-character-gun.jpg&f=1&nofb=1&ipt=54faa5094836a222761e2da2a7b128e42100b6a246287fc0851382a63df72f8c&ipo=images');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+  }
+</style>
+</head>
+<body data-day="perjantai">
+
+<header>
+  <div class="logo"><a href="index.html"> Hyvinkää Lanit</a></div>
+
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+  </button>
+
+  <nav id="nav-menu">
+      <ul>
+          <li><a href="perjantai.html">PERJANTAI</a></li>
+          <li><a href="lauantai.html">LAUANTAI</a></li>
+      </ul>
+  </nav>
+</header>
+
+<h1>Perjantain pelit</h1>
+<div id="status"></div>
+<div class="counters" id="counters"></div>
+
+<div class="wrap">
+  <table id="dataTable">
+    <thead><tr id="headRow"></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

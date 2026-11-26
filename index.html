@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+body {
+      /* Dark gradient overlay + CS2 Background Image */
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+                  url('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpavunvarsi.fi%2Fassets%2Fshop%2Fimages%2Fitems%2F3413%2Ftornituuletin-air-tower-45w.jpeg&f=1&nofb=1&ipt=fc199bc9d55f174f11c47b62a8c4c3606dcd3b11fa3aa304a638df7b20601b64&ipo=images');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+  }
+</style>
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="index.html"> Hyvinkää Lanit</a></div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="perjantai.html">PERJANTAI</a></li>
+                <li><a href="lauantai.html">LAUANTAI</a></li>
+            </ul>
+        </nav>        
+    </header>
+
+<main>
+    <div class="etusivu">
+        <ul>
+            <li><p><a href="perjantai.html">PERJANTAI</a></p></li>
+            <li><p><a href="lauantai.html">LAUANTAI</a></p></li>
+         </ul>
+    </div>
+</main>
+<script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+</script>
+</body>
+</html>

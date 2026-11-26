@@ -76,8 +76,6 @@
 
   let rows = [];            // tallennetut rivit (järjestys = id-järjestys)
   let draft = emptyRow();   // viimeinen tyhjä rivi, johon kirjoitetaan seuraava peli
-  let sortKey = null;
-  let sortAsc = true;
   let loaded = false;
   let connError = false;
 
@@ -85,43 +83,12 @@
   const tbody = document.querySelector('#dataTable tbody');
   const countersEl = document.getElementById('counters');
 
-  // ---------- Otsikot ja lajittelu ----------
-  const thEls = columns.map(col => {
+  // ---------- Otsikot ----------
+  columns.forEach(col => {
     const th = document.createElement('th');
-    th.addEventListener('click', () => sortBy(col));
+    th.textContent = col.name;
     headRow.appendChild(th);
-    return th;
   });
-  function updateHeaders() {
-    columns.forEach((col, i) => {
-      const arrow = sortKey === col.key ? (sortAsc ? ' ▲' : ' ▼') : ' ↕';
-      thEls[i].textContent = col.name + arrow;
-    });
-  }
-  function sortBy(col) {
-    if (col.type === 'action') return;
-    if (sortKey === col.key) {
-      if (sortAsc) sortAsc = false;
-      else { sortKey = null; sortAsc = true; }   // kolmas klikkaus palauttaa alkuperäisen järjestyksen
-    } else {
-      sortKey = col.key;
-      sortAsc = true;
-    }
-    updateHeaders();
-    render();
-  }
-  function viewRows() {
-    if (!sortKey) return rows.slice();
-    const k = sortKey;
-    return rows.slice().sort((a, b) => {
-      const x = a[k], y = b[k];
-      let r;
-      if (typeof x === 'boolean') r = Number(x) - Number(y);
-      else if (x !== '' && y !== '' && !isNaN(x) && !isNaN(y)) r = x - y;
-      else r = String(x).localeCompare(String(y));
-      return sortAsc ? r : -r;
-    });
-  }
 
   // ---------- Näkymä ----------
   function updateResult(row) {
@@ -131,7 +98,7 @@
     row._resultCell.className = row.tulos === 'voitto' ? 'win' : row.tulos === 'tappio' ? 'loss' : 'tasapeli';
   }
 
-  // Keltainen = 2 putkeen, punainen = 3+ putkeen (alkuperäisessä rivijärjestyksessä)
+  // Keltainen = 2 putkeen, punainen = 3+ putkeen
   function updateHighlights() {
     const all = [...rows, draft];
     all.forEach((row, index) => {
@@ -205,7 +172,7 @@
 
   function render() {
     tbody.innerHTML = '';
-    viewRows().forEach(r => tbody.appendChild(buildRow(r)));
+    rows.forEach(r => tbody.appendChild(buildRow(r)));
     tbody.appendChild(buildRow(draft));
     updateHighlights();
     updateCounters();
@@ -304,7 +271,6 @@
     render();
   }
 
-  updateHeaders();
   render();
   setStatus('Ladataan…');
   load().then(() => { if (loaded && !connError) setStatus(''); });
